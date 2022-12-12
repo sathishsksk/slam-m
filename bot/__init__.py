@@ -397,6 +397,16 @@ try:
             raise KeyError
 except KeyError:
     pass
+IS_PREMIUM_USER = False
+USER_SESSION_STRING = environ.get('USER_SESSION_STRING', '')
+if len(USER_SESSION_STRING) == 0:
+    log_info("Creating client from BOT_TOKEN")
+    app = Client(name='pyrogram', api_id=TELEGRAM_API, api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
+else:
+    log_info("Creating client from USER_SESSION_STRING")
+    app = Client(name='pyrogram', api_id=TELEGRAM_API, api_hash=TELEGRAM_HASH, session_string=USER_SESSION_STRING, parse_mode=enums.ParseMode.HTML, no_updates=True)
+    with app:
+        IS_PREMIUM_USER = app.me.is_premium
 
 DRIVES_NAMES.append("Main")
 DRIVES_IDS.append(parent_id)
